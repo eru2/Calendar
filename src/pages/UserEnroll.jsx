@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/common/Button'
-
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 const schema = yup.object().shape({
   userId: yup.string().min(3, '아이디는 3자 이상이어야 합니다.').required('아이디를 입력하세요.'),
@@ -67,17 +68,18 @@ const UserEnroll = () => {
   };
 
   const onSubmit = async (data) => {
-    const res = await fetch('http://localhost:3001/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    try {
+      const res = await axios.post('http://localhost:3001/users', data);
   
-    if (res.ok) {
-      alert('회원가입 완료!');
-      navigate('/'); 
-    } else {
-      alert('회원가입 실패');
+      if (res.status === 201 || res.status === 200) {
+        toast.success('회원가입 완료!');
+        navigate('/');
+      } else {
+        toast.error('회원가입 실패');
+      }
+    } catch (error) {
+      toast.error('서버 오류로 회원가입에 실패했습니다.');
+      console.error(error);
     }
   };
   

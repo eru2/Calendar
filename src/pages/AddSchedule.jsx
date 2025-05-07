@@ -3,7 +3,9 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Button from '../components/common/Button'
+import Button from '../components/common/Button';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const AddSchedule = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -14,7 +16,7 @@ const AddSchedule = () => {
 
   const handleSubmit = async () => {
     if (!title.trim()) {
-      alert('일정 제목을 입력하세요.');
+      toast.error('일정 제목을 입력하세요.');
       return;
     }
 
@@ -22,23 +24,27 @@ const AddSchedule = () => {
       userId: user.userId,
       title,
       description,
-      date: selectedDate.toLocaleDateString('sv-SE'),
+      date: selectedDate.toLocaleDateString('sv-SE'), // ISO 포맷 (yyyy-mm-dd)
     };
 
-    await fetch('http://localhost:3001/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newEvent),
-    });
+    try {
+      const res = await axios.post('http://localhost:3001/events', newEvent);
+      if (res.status === 201 || res.status === 200) {
+        toast.success('일정이 추가되었습니다.');
+        navigate('/calendar');
+      } else {
+        toast.error('일정 추가에 실패했습니다.');
+      }
+    } catch (error) {
+      toast.error('서버 오류로 실패했습니다.');
+      console.error(error);
+    }
+  };
 
+  const handleback = () => {
     navigate('/calendar');
   };
 
-  
-  const handleback = async () => {
-    navigate("/calendar");
-  }
-  
   return (
     <PageWrapper>
       <ContentBox>
@@ -49,7 +55,7 @@ const AddSchedule = () => {
           />
           <p>선택한 날짜: {selectedDate.toLocaleDateString('ko-KR')}</p>
         </Section>
-  
+
         <Section>
           <h2>일정 추가</h2>
           <Input
@@ -71,10 +77,11 @@ const AddSchedule = () => {
       </ContentBox>
     </PageWrapper>
   );
-  
 };
 
 export default AddSchedule;
+
+// ------------------------ 스타일 ------------------------
 
 const PageWrapper = styled.div`
   display: flex;
@@ -94,14 +101,6 @@ const ContentBox = styled.div`
   background: white;
   border-radius: 16px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-`;
-
-
-const Container = styled.div`
-  max-width: 1100px;
-  margin: 40px auto;
-  display: flex;
-  gap: 40px;
 `;
 
 const Section = styled.div`

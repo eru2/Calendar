@@ -10,6 +10,12 @@ import AddSchedule from './pages/AddSchedule'
 import NotFound from './pages/NotFound'
 import UpdateSchedule from  './pages/UpdateSchedule'
 import UserInfo from './pages/UserInfo'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { performToast } from './utils/performToast';
+
+
+performToast({ msg: '요청에 성공하였습니다.1', type: 'success' });
 
 function App() {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -28,6 +34,7 @@ function App() {
        <Route path="/edit/:eventId" element={<UpdateSchedule />} />     
        <Route path="/user" element={<UserInfo />} />
       </Routes>
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   )
 }

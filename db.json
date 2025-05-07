@@ -49,6 +49,16 @@
       "password": "Lee12345678",
       "name": "Lee",
       "nickName": "Lee"
+    },
+    {
+      "id": "66ac",
+      "reason": [
+        "개인 목표"
+      ],
+      "userId": "lee2",
+      "password": "lee12345678",
+      "name": "이상준",
+      "nickName": "lee"
     }
   ],
   "events": [
@@ -67,18 +77,32 @@
       "description": "프론트엔드 스터디 참여"
     },
     {
-      "id": "9516",
-      "userId": "admin",
-      "title": "진짜 가는 날!",
-      "description": "",
-      "date": "2025-05-07"
-    },
-    {
       "id": "1297",
       "userId": "admin",
       "title": "공부",
-      "description": "",
+      "description": "피곤",
       "date": "2025-05-08"
+    },
+    {
+      "id": "d72a",
+      "userId": "admin",
+      "title": "금요일!!!",
+      "description": "금요일 다시 주말 시작",
+      "date": "2025-05-09"
+    },
+    {
+      "id": "af55",
+      "userId": "admin",
+      "title": "일요일 ㅜㅜ",
+      "description": "",
+      "date": "2025-05-11"
+    },
+    {
+      "id": "0c10",
+      "userId": "admin",
+      "title": "월요일....",
+      "description": "",
+      "date": "2025-05-12"
     }
   ]
 }

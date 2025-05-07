@@ -108,7 +108,7 @@ const CalendarPage = () => {
                 style={{
                   fontSize: '10px',
                   color: isToday ? '#ffffff' : '#280B0B',
-                  background: isToday ? '#ffffff' : '#A5C4EE',
+                  background: isToday ? 'default' : '#A5C4EE',
                   borderRadius: '6px',
                   fontWeight: 'bold'
                 }}
