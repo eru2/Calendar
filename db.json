@@ -59,6 +59,17 @@
       "password": "lee12345678",
       "name": "이상준",
       "nickName": "lee"
+    },
+    {
+      "id": "8f94",
+      "reason": [
+        "개인 목표",
+        "공부 계획"
+      ],
+      "userId": "admin1",
+      "password": "1234158646",
+      "name": "관리자",
+      "nickName": "관리자"
     }
   ],
   "events": [
@@ -67,7 +78,7 @@
       "userId": "admin",
       "title": "운영 회의",
       "date": "2025-05-10",
-      "description": "운영팀 정기 회의"
+      "description": "운영 정기 회의"
     },
     {
       "id": "2",
@@ -79,7 +90,7 @@
     {
       "id": "1297",
       "userId": "admin",
-      "title": "공부",
+      "title": "공부!!",
       "description": "피곤",
       "date": "2025-05-08"
     },
@@ -103,6 +114,13 @@
       "title": "월요일....",
       "description": "",
       "date": "2025-05-12"
+    },
+    {
+      "id": "b8b8",
+      "userId": "admin",
+      "title": "화요일",
+      "description": "ㄹㅇㅁㄹㄴㅁ",
+      "date": "2025-05-13"
     }
   ]
 }

@@ -4,7 +4,6 @@ import 'react-calendar/dist/Calendar.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../components/common/Button';
-import axios from 'axios';
 
 const UpdateSchedule = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -17,7 +16,7 @@ const UpdateSchedule = () => {
   useEffect(() => {
     // 기존 이벤트 정보 불러오기
     const fetchEvent = async () => {
-      const res = await axios(`http://localhost:3001/events/${eventId}`);
+      const res = await fetch(`http://localhost:3001/events/${eventId}`);
       const data = await res.json();
       setTitle(data.title);
       setDescription(data.description || '');
@@ -40,7 +39,11 @@ const UpdateSchedule = () => {
       date: selectedDate.toLocaleDateString('sv-SE'),
     };
 
-    await axios(`http://localhost:3001/events/${eventId}`);
+    await fetch(`http://localhost:3001/events/${eventId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedEvent),
+    });
 
     navigate('/calendar');
   };
