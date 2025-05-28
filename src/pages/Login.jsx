@@ -4,34 +4,32 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const LoginPage = () => {
-
   const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setUserPwd] = useState('');
   const navigate = useNavigate();
-  const [loginCheck, setLoginCheck] = useState(false); 
+  const [loginCheck, setLoginCheck] = useState(false);
+
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await axios.get('http://localhost:3001/users', {
-        params: {
-          userId,
-          password,
-        },
+      const response = await axios.post(`http://localhost:8080/api/members/login`, {
+        userId,
+        password,
       });
-  
-      const users = response.data;
-  
-      if (users.length > 0) {
-        const user = users[0];
-  
-        sessionStorage.setItem("userId", user.userId);
-        sessionStorage.setItem("password", user.password);
-        sessionStorage.setItem("nickName", user.nickName);
-        sessionStorage.setItem("name", user.name);
-        sessionStorage.setItem("id", user.id);
-        sessionStorage.setItem("loginUser", JSON.stringify(user)); // 전체 저장
-  
+
+      const user = response.data;
+
+      
+
+      if (user) {
+        localStorage.setItem("userId", user.userId);
+        localStorage.setItem("password", user.password);
+        localStorage.setItem("nickName", user.nickName);
+        localStorage.setItem("userName", user.userName);
+        localStorage.setItem("id", user.id);
+        localStorage.setItem("loginUser", JSON.stringify(user));
+
         setLoginCheck(false);
         navigate("/calendar");
       } else {
@@ -48,23 +46,34 @@ const LoginPage = () => {
       <LoginBox>
         <LoginTitle>로그인</LoginTitle>
         <form>
-        <Input type="text" placeholder="아이디" id="userId" onChange={(e) => setUserId(e.target.value)} />
-        <Input type="password" placeholder="비밀번호" id="password" onChange={(e) => setPassword(e.target.value)} />
-        {loginCheck && (<label style={{color:"red"}}> 아이디 혹은 비밀번호가 틀렸습니다.</label> )}
-        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+          <Input
+            type="text"
+            placeholder="아이디"
+            id="userId"
+            onChange={(e) => setUserId(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            id="userPwd"
+            onChange={(e) => setUserPwd(e.target.value)}
+          />
+          {loginCheck && (
+            <label style={{ color: "red" }}> 아이디 혹은 비밀번호가 틀렸습니다.</label>
+          )}
+          <LoginButton onClick={handleLogin}>로그인</LoginButton>
         </form>
         <LinkText>
-          계정이 없으신가요? <Link to='/Enroll'>회원가입</Link>
+          계정이 없으신가요? <Link to="/Enroll">회원가입</Link>
         </LinkText>
       </LoginBox>
     </LoginWrapper>
-    
   );
 };
 
 export default LoginPage;
 
-
+// 스타일 컴포넌트는 동일하게 유지
 const LoginWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -131,4 +140,3 @@ const LinkText = styled.p`
     }
   }
 `;
-

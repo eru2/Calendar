@@ -53,7 +53,7 @@ const UserEnroll = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:3001/users?userId=${id}`);
+      const res = await fetch(`http://localhost:8080/api/members/${id}`);
       const data = await res.json();
 
       if (data.length > 0) {
@@ -68,19 +68,28 @@ const UserEnroll = () => {
   };
 
   const onSubmit = async (data) => {
-    try {
-      const res = await axios.post('http://localhost:3001/users', data);
-  
-      if (res.status === 201 || res.status === 200) {
-        toast.success('회원가입 완료!');
-        navigate('/');
-      } else {
-        toast.error('회원가입 실패');
-      }
-    } catch (error) {
-      toast.error('서버 오류로 회원가입에 실패했습니다.');
-      console.error(error);
+  const formattedData = {
+  userId: data.userId,      
+  password: data.password,
+  name: data.name,
+  nickName: data.nickName,
+  reason: data.reason,
+};
+
+
+  try {
+    const res = await axios.post('http://localhost:8080/api/members/Enroll', formattedData);
+
+    if (res.status === 201 || res.status === 200) {
+      toast.success('회원가입 완료!');
+      navigate('/');
+    } else {
+      toast.error('회원가입 실패');
     }
+  } catch (error) {
+    toast.error('서버 오류로 회원가입에 실패했습니다.');
+    console.error(error);
+  }
   };
   
 

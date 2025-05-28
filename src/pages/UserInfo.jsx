@@ -2,15 +2,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { IoIosReturnLeft } from "react-icons/io";
-import axios from 'axios';
 
 const UserInfo = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-  const user = JSON.parse(sessionStorage.getItem('loginUser')); //로컬 스토리지를 통해 사용자 정보 로드
 
-  const userId = searchParams.get('userId'); //userId 추출
+  const userId = searchParams.get('userId'); // URL에서 userId 추출
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -20,7 +18,7 @@ const UserInfo = () => {
         return;
       }
 
-      const res = await fetch(`http://localhost:3001/users?userId=${userId}`);
+      const res = await fetch(`http://localhost:8080/api/members/${userId}`);
       const data = await res.json();
       if (data.length > 0) {
         setUserInfo(data[0]);
@@ -33,32 +31,30 @@ const UserInfo = () => {
     fetchUser();
   }, [userId, navigate]);
 
-
-
   if (!userInfo) return <div style={{ textAlign: 'center', marginTop: '50px' }}>불러오는 중...</div>;
 
   return (
     <EnrollWrapper>
       <EnrollBox>
-        <EnrollTitle>{userInfo.nickName}님의 정보 조회</EnrollTitle>
+        <EnrollTitle>{userInfo.nick_name}님의 정보 조회</EnrollTitle>
         <FormGroup>
           <Label>아이디</Label>
-          <Input type="text" value={userInfo.userId} readOnly />
+          <Input type="text" value={userInfo.user_id} readOnly />
         </FormGroup>
 
         <FormGroup>
           <Label>비밀번호</Label>
-          <Input type="password" value={userInfo.password} readOnly />
+          <Input type="password" value={userInfo.user_pwd} readOnly />
         </FormGroup>
 
         <FormGroup>
           <Label>이름</Label>
-          <Input type="text" value={userInfo.name} readOnly />
+          <Input type="text" value={userInfo.user_name} readOnly />
         </FormGroup>
 
         <FormGroup>
           <Label>닉네임</Label>
-          <Input type="text" value={userInfo.nickName} readOnly />
+          <Input type="text" value={userInfo.nick_name} readOnly />
         </FormGroup>
 
         <FormGroup>
@@ -68,14 +64,17 @@ const UserInfo = () => {
               <TagButton key={idx} className="active">{reason}</TagButton>
             ))}
           </TagGroup>
-          <SubmitButton onClick={() => navigate(-1)}> <IoIosReturnLeft />이전으로</SubmitButton>
         </FormGroup>
+
+        <SubmitButton onClick={() => navigate(-1)}> <IoIosReturnLeft /> 이전으로</SubmitButton>
       </EnrollBox>
     </EnrollWrapper>
   );
 };
 
 export default UserInfo;
+
+// ---------------- 스타일 ----------------
 
 const EnrollWrapper = styled.div`
   display: flex;
@@ -135,7 +134,6 @@ const TagButton = styled.div`
   border-radius: 20px;
   font-size: 14px;
 `;
-
 
 const SubmitButton = styled.button`
   width: 100%;

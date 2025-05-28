@@ -6,41 +6,40 @@ import styled from 'styled-components';
 import Button from '../components/common/Button';
 
 const UpdateSchedule = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [eventDate, setEventDate] = useState(new Date());
+  const [eventTitle, setEventTitle] = useState('');
+  const [eventContent, setEventContent] = useState('');
   const navigate = useNavigate();
-  const { eventId } = useParams(); // URL에서 eventId 가져오기
+  const { eventId } = useParams();
   const user = JSON.parse(sessionStorage.getItem('loginUser'));
 
   useEffect(() => {
-    // 기존 이벤트 정보 불러오기
     const fetchEvent = async () => {
-      const res = await fetch(`http://localhost:3001/events/${eventId}`);
+      const res = await fetch(`http://localhost:8080/api/events/${eventId}`);
       const data = await res.json();
-      setTitle(data.title);
-      setDescription(data.description || '');
-      setSelectedDate(new Date(data.date));
+      setEventTitle(data.eventTitle);
+      setEventContent(data.eventContent || '');
+      setEventDate(new Date(data.eventDate));
     };
     fetchEvent();
   }, [eventId]);
 
   const handleSubmit = async () => {
-    if (!title.trim()) {
+    if (!eventTitle.trim()) {
       alert('일정 제목을 입력하세요.');
       return;
     }
 
     const updatedEvent = {
-      id: parseInt(eventId),
+      eventNo: parseInt(eventId),
       userId: user.userId,
-      title,
-      description,
-      date: selectedDate.toLocaleDateString('sv-SE'),
+      eventTitle,
+      eventContent,
+      eventDate: eventDate.toLocaleDateString('sv-SE'),
     };
 
-    await fetch(`http://localhost:3001/events/${eventId}`, {
-      method: 'PUT',
+    await fetch(`http://localhost:8080/api/events/${eventId}`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedEvent),
     });
@@ -56,11 +55,8 @@ const UpdateSchedule = () => {
     <PageWrapper>
       <ContentBox>
         <Section>
-          <Calendar
-            value={selectedDate}
-            onChange={setSelectedDate}
-          />
-          <p>선택한 날짜: {selectedDate.toLocaleDateString('ko-KR')}</p>
+          <Calendar value={eventDate} onChange={setEventDate} />
+          <p>선택한 날짜: {eventDate.toLocaleDateString('ko-KR')}</p>
         </Section>
 
         <Section>
@@ -68,13 +64,13 @@ const UpdateSchedule = () => {
           <Input
             type="text"
             placeholder="제목을 입력하세요"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
+            value={eventTitle}
+            onChange={e => setEventTitle(e.target.value)}
           />
           <Textarea
             placeholder="설명을 입력하세요 (선택)"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
+            value={eventContent}
+            onChange={e => setEventContent(e.target.value)}
           />
           <ButtonGroup>
             <Button onClick={handleBack}>취소</Button>
@@ -88,7 +84,7 @@ const UpdateSchedule = () => {
 
 export default UpdateSchedule;
 
-
+// 스타일 컴포넌트
 const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -107,14 +103,6 @@ const ContentBox = styled.div`
   background: white;
   border-radius: 16px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-`;
-
-
-const Container = styled.div`
-  max-width: 1100px;
-  margin: 40px auto;
-  display: flex;
-  gap: 40px;
 `;
 
 const Section = styled.div`

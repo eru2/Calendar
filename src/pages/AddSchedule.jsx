@@ -9,26 +9,27 @@ import { toast } from 'react-toastify';
 
 const AddSchedule = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [eventTitle, setEventTitle] = useState('');
+  const [eventContent, setEventContent] = useState('');
   const navigate = useNavigate();
-  const user = JSON.parse(sessionStorage.getItem('loginUser'));
+  const user = JSON.parse(localStorage.getItem('loginUser'));
 
   const handleSubmit = async () => {
-    if (!title.trim()) {
+    if (!eventTitle.trim()) {
       toast.error('일정 제목을 입력하세요.');
       return;
     }
 
-    const newEvent = {
-      userId: user.userId,
-      title,
-      description,
-      date: selectedDate.toLocaleDateString('sv-SE'), // ISO 포맷 (yyyy-mm-dd)
-    };
+const newEvent = {
+  user_Id: user.userId,
+  title: eventTitle,
+  description: eventContent,
+  date: selectedDate.toLocaleDateString('sv-SE')
+};
+
 
     try {
-      const res = await axios.post('http://localhost:3001/events', newEvent);
+      const res = await axios.post('http://localhost:8080/api/events', newEvent);
       if (res.status === 201 || res.status === 200) {
         toast.success('일정이 추가되었습니다.');
         navigate('/calendar');
@@ -41,7 +42,7 @@ const AddSchedule = () => {
     }
   };
 
-  const handleback = () => {
+  const handleBack = () => {
     navigate('/calendar');
   };
 
@@ -61,16 +62,16 @@ const AddSchedule = () => {
           <Input
             type="text"
             placeholder="제목을 입력하세요"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
+            value={eventTitle}
+            onChange={e => setEventTitle(e.target.value)}
           />
           <Textarea
             placeholder="설명을 입력하세요 (선택)"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
+            value={eventContent}
+            onChange={e => setEventContent(e.target.value)}
           />
           <ButtonGroup>
-            <Button onClick={handleback}>취소</Button>
+            <Button onClick={handleBack}>취소</Button>
             <Button onClick={handleSubmit}>추가</Button>
           </ButtonGroup>
         </Section>
